@@ -1,13 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { useFirebase } from "../context/Firebase";
 
 const Login = () => {
+  const firebase = useFirebase();
+  console.log(firebase);
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const firebase = useFirebase();
+  useEffect(() => {
+    if (firebase.isLoggedIn) {
+      navigate("/");
+    }
+  }, [navigate, firebase]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -44,7 +53,9 @@ const Login = () => {
         </Button>
       </Form>
       <h1 className="mt-5 mb-5">OR</h1>
-      <Button variant="danger">Signin with Google</Button>
+      <Button variant="danger" onClick={firebase.signingupWithGoogle}>
+        Signin with Google
+      </Button>
     </div>
   );
 };
